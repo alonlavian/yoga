@@ -35,13 +35,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Save user message
-  await db.insert(chatMessages).values({
-    studentId: parsed.data.studentId,
-    role: "user",
-    content: parsed.data.content,
-  });
-
   // Gather student context
   const student = await db
     .select()
@@ -71,13 +64,19 @@ export async function POST(request: NextRequest) {
 
   const provider = await getProvider();
 
+  // Build full message list including the new user message
+  const fullHistory = [
+    ...history.map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+    })),
+    { role: "user" as const, content: parsed.data.content },
+  ];
+
   let response: string;
   try {
     response = await provider.chat(
-      history.map((m) => ({
-        role: m.role as "user" | "assistant",
-        content: m.content,
-      })),
+      fullHistory,
       {
         student: {
           id: student[0].id,
@@ -95,14 +94,21 @@ export async function POST(request: NextRequest) {
         classPlanNames: allPlans.map((p) => p.title),
       }
     );
-  } catch {
+  } catch (err) {
+    console.error("AI provider error:", err);
+    const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json(
-      { error: "AI provider error. Check your API key in Settings." },
+      { error: `AI provider error: ${message}` },
       { status: 502 }
     );
   }
 
-  // Save assistant message
+  // Save both messages only after successful AI response
+  await db.insert(chatMessages).values({
+    studentId: parsed.data.studentId,
+    role: "user",
+    content: parsed.data.content,
+  });
   await db.insert(chatMessages).values({
     studentId: parsed.data.studentId,
     role: "assistant",
