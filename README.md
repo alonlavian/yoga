@@ -20,9 +20,11 @@ A student management app for yoga instructors. Track students, plan classes, log
 
 ## Getting Started
 
+Requires [Node.js](https://nodejs.org/) (v20+). Works on macOS, Windows, and Linux.
+
 ```bash
 npm install
-npm run db:migrate
+npx tsx src/db/migrate.ts
 npm run dev
 ```
 
