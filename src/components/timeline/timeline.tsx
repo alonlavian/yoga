@@ -89,13 +89,13 @@ export function Timeline({ studentId }: TimelineProps) {
       <div ref={formRef}>
         {showForm === "note" && (
           <div className="mb-6 rounded-lg border bg-card p-4">
-            <AddNoteForm studentId={studentId} onAdded={handleAdded} />
+            <AddNoteForm studentId={studentId} onAdded={handleAdded} onCancel={() => setShowForm(null)} />
           </div>
         )}
 
         {showForm === "class" && (
           <div className="mb-6 rounded-lg border bg-card p-4">
-            <AddClassForm studentId={studentId} onAdded={handleAdded} />
+            <AddClassForm studentId={studentId} onAdded={handleAdded} onCancel={() => setShowForm(null)} />
           </div>
         )}
       </div>
@@ -110,17 +110,8 @@ export function Timeline({ studentId }: TimelineProps) {
         </div>
       ) : (
         <div className="mt-2">
-          {entries.map((entry) => (
-            <TimelineEntry
-              key={entry.id}
-              entry={entry}
-              onDelete={fetchEntries}
-              onEdit={fetchEntries}
-            />
-          ))}
-
-          {/* + button at end of timeline */}
-          <div className="relative flex gap-4 pt-2">
+          {/* + button at top of timeline */}
+          <div className="relative flex gap-4 pb-4">
             <div className="flex flex-col items-center">
               <div className="relative">
                 <button
@@ -130,10 +121,11 @@ export function Timeline({ studentId }: TimelineProps) {
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 </button>
               </div>
+              <div className="w-px flex-1 bg-border" />
             </div>
 
             {showBottomAdd && (
-              <div className="flex items-center gap-2 -mt-0.5">
+              <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -153,6 +145,15 @@ export function Timeline({ studentId }: TimelineProps) {
               </div>
             )}
           </div>
+
+          {entries.map((entry) => (
+            <TimelineEntry
+              key={entry.id}
+              entry={entry}
+              onDelete={fetchEntries}
+              onEdit={fetchEntries}
+            />
+          ))}
         </div>
       )}
     </div>

@@ -22,9 +22,10 @@ interface ClassPlan {
 interface AddClassFormProps {
   studentId: number;
   onAdded: () => void;
+  onCancel?: () => void;
 }
 
-export function AddClassForm({ studentId, onAdded }: AddClassFormProps) {
+export function AddClassForm({ studentId, onAdded, onCancel }: AddClassFormProps) {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [duration, setDuration] = useState("");
   const [summary, setSummary] = useState("");
@@ -119,9 +120,16 @@ export function AddClassForm({ studentId, onAdded }: AddClassFormProps) {
           rows={3}
         />
       </div>
-      <Button type="submit" size="sm" disabled={saving}>
-        {saving ? "Logging..." : "Log Class"}
-      </Button>
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={saving}>
+          {saving ? "Logging..." : "Log Class"}
+        </Button>
+        {onCancel && (
+          <Button type="button" variant="outline" size="sm" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
+      </div>
     </form>
   );
 }

@@ -10,9 +10,10 @@ import { toast } from "sonner";
 interface AddNoteFormProps {
   studentId: number;
   onAdded: () => void;
+  onCancel?: () => void;
 }
 
-export function AddNoteForm({ studentId, onAdded }: AddNoteFormProps) {
+export function AddNoteForm({ studentId, onAdded, onCancel }: AddNoteFormProps) {
   const [content, setContent] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [saving, setSaving] = useState(false);
@@ -66,9 +67,16 @@ export function AddNoteForm({ studentId, onAdded }: AddNoteFormProps) {
           rows={3}
         />
       </div>
-      <Button type="submit" size="sm" disabled={saving || !content.trim()}>
-        {saving ? "Adding..." : "Add Note"}
-      </Button>
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={saving || !content.trim()}>
+          {saving ? "Adding..." : "Add Note"}
+        </Button>
+        {onCancel && (
+          <Button type="button" variant="outline" size="sm" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
+      </div>
     </form>
   );
 }

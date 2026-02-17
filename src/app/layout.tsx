@@ -31,7 +31,10 @@ export default function RootLayout({
       >
         <div className="flex h-screen">
           <Sidebar />
-          <main className="flex-1 overflow-y-auto p-8">{children}</main>
+          <main className="flex-1 overflow-y-auto p-8 relative">
+            <div className="absolute inset-0 bg-[url('/yoga-bg.jpg')] bg-no-repeat bg-center bg-cover opacity-[0.12] pointer-events-none" />
+            <div className="relative">{children}</div>
+          </main>
         </div>
         <Toaster />
       </body>

@@ -40,30 +40,30 @@ export function StudentCard({ student }: StudentCardProps) {
 
   return (
     <Link href={`/students/${student.id}`}>
-      <Card className="cursor-pointer transition-shadow hover:shadow-md">
-        <CardHeader className="pb-2">
-          <div className="flex items-center gap-3">
+      <Card className="cursor-pointer transition-shadow hover:shadow-md min-h-40">
+        <CardHeader className="p-4 pb-2">
+          <div className="flex items-center gap-2.5">
             <Image
               src={avatarSrc}
               alt={student.name}
-              width={48}
-              height={48}
+              width={36}
+              height={36}
               className="rounded-full bg-muted"
               unoptimized
             />
             <div className="min-w-0">
-              <p className="text-lg font-semibold leading-tight truncate">
+              <p className="text-sm font-semibold leading-tight truncate">
                 {student.name}
               </p>
               {student.dateOfBirth && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   Age {getAge(student.dateOfBirth)}
                 </p>
               )}
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-1 text-sm text-muted-foreground">
+        <CardContent className="p-4 pt-0 space-y-0.5 text-xs text-muted-foreground">
           {student.email && <p>{student.email}</p>}
           {student.phone && <p>{student.phone}</p>}
           {student.startDate && (
@@ -78,12 +78,12 @@ export function StudentCard({ student }: StudentCardProps) {
           )}
           {student.knownIssues && (
             <div className="flex items-start gap-1.5 pt-1 text-amber-600 dark:text-amber-400">
-              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <p className="line-clamp-2">{student.knownIssues}</p>
+              <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+              <p className="line-clamp-1">{student.knownIssues}</p>
             </div>
           )}
           {student.notes && (
-            <p className="line-clamp-2 pt-1">{student.notes}</p>
+            <p className="line-clamp-1 pt-1">{student.notes}</p>
           )}
         </CardContent>
       </Card>

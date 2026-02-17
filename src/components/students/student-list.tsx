@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/layout/page-header";
 import { StudentCard } from "./student-card";
 import { StudentForm } from "./student-form";
@@ -24,6 +26,7 @@ interface Student {
 export function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   const fetchStudents = useCallback(async () => {
     const res = await fetch("/api/students");
@@ -60,6 +63,17 @@ export function StudentList() {
     fetchStudents();
   };
 
+  const filtered = useMemo(() => {
+    if (!search.trim()) return students;
+    const q = search.toLowerCase();
+    return students.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.email?.toLowerCase().includes(q) ||
+        s.phone?.includes(q)
+    );
+  }, [students, search]);
+
   return (
     <div>
       <PageHeader
@@ -72,6 +86,16 @@ export function StudentList() {
           />
         }
       />
+      {students.length > 0 && (
+        <div className="mb-4">
+          <Input
+            placeholder="Search students..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-xs"
+          />
+        </div>
+      )}
       {loading ? (
         <p className="text-muted-foreground">Loading...</p>
       ) : students.length === 0 ? (
@@ -81,8 +105,8 @@ export function StudentList() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {students.map((student) => (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((student) => (
             <StudentCard key={student.id} student={student} />
           ))}
         </div>

@@ -34,6 +34,7 @@ export function PlanList() {
   const [loading, setLoading] = useState(true);
   const [showBuilder, setShowBuilder] = useState(false);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
+  const [expandedPlan, setExpandedPlan] = useState<Plan | null>(null);
 
   const fetchPlans = useCallback(async () => {
     const res = await fetch("/api/plans");
@@ -121,9 +122,22 @@ export function PlanList() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {plans.map((plan) => (
-            <Card key={plan.id}>
+            <Card
+              key={plan.id}
+              className="cursor-pointer transition-shadow hover:shadow-md min-h-40"
+              onClick={async () => {
+                if (expandedPlan?.id === plan.id) {
+                  setExpandedPlan(null);
+                  return;
+                }
+                const res = await fetch(`/api/plans/${plan.id}`);
+                if (res.ok) {
+                  setExpandedPlan(await res.json());
+                }
+              }}
+            >
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center justify-between text-lg">
                   {plan.title}
@@ -132,7 +146,7 @@ export function PlanList() {
                       variant="ghost"
                       size="sm"
                       className="h-7 px-2 text-xs"
-                      onClick={() => handleEdit(plan)}
+                      onClick={(e) => { e.stopPropagation(); handleEdit(plan); }}
                     >
                       Edit
                     </Button>
@@ -140,7 +154,7 @@ export function PlanList() {
                       variant="ghost"
                       size="sm"
                       className="h-7 px-2 text-xs text-muted-foreground hover:text-destructive"
-                      onClick={() => handleDelete(plan)}
+                      onClick={(e) => { e.stopPropagation(); handleDelete(plan); }}
                     >
                       Delete
                     </Button>
@@ -156,6 +170,17 @@ export function PlanList() {
                 <Badge variant="secondary" className="text-xs">
                   {new Date(plan.createdAt).toLocaleDateString()}
                 </Badge>
+                {expandedPlan?.id === plan.id && expandedPlan.items && expandedPlan.items.length > 0 && (
+                  <div className="mt-3 pt-3 border-t space-y-1">
+                    {expandedPlan.items.map((item, i) => (
+                      <p key={item.id} className="text-sm text-muted-foreground">
+                        {i + 1}. {item.poseName}
+                        {item.duration ? ` — ${item.duration}` : ""}
+                        {item.notes ? ` (${item.notes})` : ""}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
