@@ -266,7 +266,7 @@ export function TimelineEntry({ entry, onDelete, onEdit }: TimelineEntryProps) {
                     {entry.duration} min
                   </p>
                 )}
-                {entry.summary && <p className="text-sm">{entry.summary}</p>}
+                {entry.summary && <p className="text-sm line-clamp-3">{entry.summary}</p>}
                 {entry.planTitle && (
                   <div className="mt-2 pt-2 border-t">
                     <p className="text-xs font-medium text-muted-foreground mb-1">
@@ -289,13 +289,13 @@ export function TimelineEntry({ entry, onDelete, onEdit }: TimelineEntryProps) {
 
             {entry.type === "note" && entry.content && (
               <div className="rounded-lg border bg-card p-3">
-                <p className="text-sm whitespace-pre-wrap">{entry.content}</p>
+                <p className="text-sm whitespace-pre-wrap line-clamp-3">{entry.content}</p>
               </div>
             )}
 
             {entry.type === "plan_attachment" && entry.content && (
               <div className="rounded-lg border bg-card p-3">
-                <p className="text-sm">{entry.content}</p>
+                <p className="text-sm line-clamp-3">{entry.content}</p>
               </div>
             )}
           </>

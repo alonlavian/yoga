@@ -65,8 +65,8 @@ export function Timeline({ studentId }: TimelineProps) {
   };
 
   return (
-    <div>
-      <div className="flex items-center gap-2 mb-4">
+    <div className="flex flex-col min-h-0 flex-1">
+      <div className="flex items-center gap-2 mb-4 shrink-0">
         <h2 className="text-lg font-semibold">Timeline</h2>
         <div className="ml-auto flex gap-2">
           <Button
@@ -86,20 +86,18 @@ export function Timeline({ studentId }: TimelineProps) {
         </div>
       </div>
 
-      <div ref={formRef}>
-        {showForm === "note" && (
-          <div className="mb-6 rounded-lg border bg-card p-4">
+      {showForm && (
+        <div ref={formRef} className="shrink-0 mb-6 rounded-lg border bg-card p-4 max-h-96 overflow-y-auto">
+          {showForm === "note" && (
             <AddNoteForm studentId={studentId} onAdded={handleAdded} onCancel={() => setShowForm(null)} />
-          </div>
-        )}
-
-        {showForm === "class" && (
-          <div className="mb-6 rounded-lg border bg-card p-4">
+          )}
+          {showForm === "class" && (
             <AddClassForm studentId={studentId} onAdded={handleAdded} onCancel={() => setShowForm(null)} />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
+      <div className="flex-1 min-h-0 overflow-y-auto">
       {loading ? (
         <p className="text-muted-foreground">Loading...</p>
       ) : entries.length === 0 ? (
@@ -156,6 +154,7 @@ export function Timeline({ studentId }: TimelineProps) {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

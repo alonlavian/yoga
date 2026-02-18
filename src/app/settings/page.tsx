@@ -47,7 +47,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div>
+    <div className="overflow-y-auto flex-1 min-h-0">
       <PageHeader
         title="Settings"
         description="Configure your application settings"

@@ -98,7 +98,7 @@ export default function StudentDetailPage() {
     : null;
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <PageHeader
         title={age !== null ? `${student.name}, ${age}` : student.name}
         description={[student.email, student.phone]
@@ -127,8 +127,10 @@ export default function StudentDetailPage() {
         }
       />
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
-        <Timeline studentId={student.id} />
+      <div className="grid gap-8 lg:grid-cols-[1fr_380px] flex-1 min-h-0">
+        <div className="flex flex-col min-h-0">
+          <Timeline studentId={student.id} />
+        </div>
         <ChatPanel studentId={student.id} studentName={student.name} />
       </div>
     </div>
